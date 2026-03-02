@@ -1,6 +1,6 @@
 # Valorisation Donnée Météo
 
-Projet Data For Good - Saison 14
+Plateforme de visualisation des données météo nationales - Data For Good Saison 14
 
 ## Structure du projet
 
