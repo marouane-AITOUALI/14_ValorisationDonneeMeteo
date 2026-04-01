@@ -51,44 +51,8 @@ services:
     networks:
       - app_net
 
-  prometheus:
-    image: prom/prometheus:v2.54.1
-    container_name: prometheus
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.path=/prometheus"
-    volumes:
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    ports:
-      - "9090:9090"
-    depends_on:
-      - backend
-    networks:
-      - app_net
-
-  grafana:
-    image: grafana/grafana:11.2.2
-    container_name: grafana
-    environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_USERS_ALLOW_SIGN_UP: "false"
-    volumes:
-      - grafana-data:/var/lib/grafana
-      - ./monitoring/grafana/provisioning/datasources/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml:ro
-      - ./monitoring/grafana/provisioning/dashboards/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
-      - ./monitoring/grafana/dashboards/backend-metrics.json:/var/lib/grafana/dashboards/backend-metrics.json:ro
-    ports:
-      - "3001:3000"
-    depends_on:
-      - prometheus
-    networks:
-      - app_net
-
 volumes:
   timescaledb-data:
-    driver: local
-  grafana-data:
     driver: local
 networks:
   app_net:
