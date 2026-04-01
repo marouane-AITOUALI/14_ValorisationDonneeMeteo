@@ -1,5 +1,7 @@
 # Valorisation Donnée Météo
 
+[![CI/CD Pipeline](https://github.com/marouane-AITOUALI/14_ValorisationDonneeMeteo/actions/workflows/ci.yml/badge.svg)](https://github.com/marouane-AITOUALI/14_ValorisationDonneeMeteo/actions/workflows/ci.yml)
+
 Plateforme de visualisation des données météo nationales - Data For Good Saison 14
 
 ## Structure du projet
@@ -19,6 +21,21 @@ Consultez les README de chaque sous-projet :
 ## Contribuer
 
 Ce projet fait partie de la saison 14 de Data For Good.
+
+## CI/CD
+
+Le workflow [ci.yml](.github/workflows/ci.yml) exécute automatiquement :
+
+- Installation des dépendances backend et frontend
+- Tests backend (avec rapport JUnit)
+- Lint backend (Ruff) et frontend (ESLint)
+- Security scans (Bandit + pip-audit)
+- Build Docker backend/frontend, avec push vers GHCR uniquement sur `main`
+
+Artefacts générés dans GitHub Actions :
+
+- `test-report` : rapport des tests (`pytest-report.xml`)
+- `security-scan-reports` : rapports de scans (`bandit-report.json`, `pip-audit-report.json`)
 
 ## Utilisation de Git
 
