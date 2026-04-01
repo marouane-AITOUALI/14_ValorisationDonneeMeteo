@@ -158,10 +158,69 @@ jobs:
             backend/reports/bandit-report.json
             backend/reports/pip-audit-report.json
 
+  trivy-report-vex:
+    name: Trivy report and VEX
+    runs-on: ubuntu-latest
+    needs: [lint]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Trivy scan (JSON report)
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: json
+          output: trivy-report.json
+          exit-code: "0"
+
+      - name: Generate CycloneDX SBOM
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: cyclonedx
+          output: trivy-sbom.cdx
+          exit-code: "0"
+          skip-setup-trivy: true
+
+      - name: Generate OpenVEX template
+        run: |
+          TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          cat > trivy.openvex.json <<'EOF'
+          {
+            "@context": "https://openvex.dev/ns/v0.2.0",
+            "@id": "https://github.com/${{ github.repository }}/vex/${{ github.run_id }}",
+            "author": "${{ github.repository }} CI",
+            "timestamp": "__TIMESTAMP__",
+            "version": 1,
+            "statements": []
+          }
+          EOF
+          sed -i "s|__TIMESTAMP__|$TS|g" trivy.openvex.json
+
+      - name: Upload Trivy report artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: |
+            trivy-report.json
+            trivy-sbom.cdx
+
+      - name: Upload VEX artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-vex-file
+          path: trivy.openvex.json
+
   docker-build-push:
     name: Docker build and push
     runs-on: ubuntu-latest
-    needs: [backend-test, lint, security-scan]
+    needs: [backend-test, lint, security-scan, trivy-report-vex]
     permissions:
       contents: read
       packages: write
