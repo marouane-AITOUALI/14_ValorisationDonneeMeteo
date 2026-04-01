@@ -97,7 +97,7 @@ jobs:
       - name: Run backend linter
         run: |
           cd backend
-          uv run ruff check . --ignore DJ001 --fix
+          uv run ruff check . --ignore DJ001
           uv run ruff format --check .
 
       - name: Setup Node.js
