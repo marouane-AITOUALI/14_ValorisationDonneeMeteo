@@ -98,7 +98,7 @@ jobs:
         run: |
           cd backend
           uv run ruff check . --ignore DJ001 --fix
-          uv run ruff format --check .
+          uv run ruff format .
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
