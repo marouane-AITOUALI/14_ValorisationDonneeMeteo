@@ -1,4 +1,6 @@
-FROM node:24-alpine AS build
+ARG NODE_BASE_IMAGE=node:24-alpine
+
+FROM ${NODE_BASE_IMAGE} AS build
 
 WORKDIR /app
 
@@ -10,7 +12,9 @@ COPY . .
 
 RUN npm run build
 
-FROM node:24-alpine AS prod
+ARG NODE_BASE_IMAGE=node:24-alpine
+
+FROM ${NODE_BASE_IMAGE} AS prod
 
 WORKDIR /app
 

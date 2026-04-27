@@ -249,6 +249,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./backend
+          build-args: |
+            PYTHON_BASE_IMAGE=${{ vars.DHI_PYTHON_BASE_IMAGE != '' && vars.DHI_PYTHON_BASE_IMAGE || 'python:3.12-slim-bookworm' }}
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
             ${{ env.REGISTRY }}/${{ steps.vars.outputs.image_name }}-backend:sha-${{ github.sha }}
@@ -258,6 +260,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./frontend
+          build-args: |
+            NODE_BASE_IMAGE=${{ vars.DHI_NODE_BASE_IMAGE != '' && vars.DHI_NODE_BASE_IMAGE || 'node:24-alpine' }}
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           tags: |
             ${{ env.REGISTRY }}/${{ steps.vars.outputs.image_name }}-frontend:sha-${{ github.sha }}
