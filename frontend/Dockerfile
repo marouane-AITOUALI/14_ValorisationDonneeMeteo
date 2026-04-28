@@ -6,7 +6,9 @@ WORKDIR /app
 
 COPY package*.json .
 
-RUN npm install
+RUN npm ci --legacy-peer-deps
+
+RUN npm rebuild esbuild
 
 COPY . .
 
